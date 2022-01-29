@@ -15,14 +15,19 @@ mosaic_dataset = r"B:\Woolpert\ArcProPython\Tutorial_geodatabse.gdb\youtube_data
 prefix = "2015/cog"
 
 counter = 0
+images_to_add = []
 
 for file in my_bucket.objects.filter(Prefix=prefix):
     counter += 1
     vsis3_image_path = os.path.join("/vsis3/", bucket, file.key). replace('\\','/')
     print("Adding {}". format(vsis3_image_path))
     print("counter = {}". format(counter))
-    arcpy.AddRastersToMosaicDataset_management(mosaic_dataset, "Raster Dataset", vsis3_image_path)
-    if counter > 5:
+
+    images_to_add.append(vsis3_image_path)
+
+    if counter > 25:
         break
 
+arcpy.AddRastersToMosaicDataset_management(mosaic_dataset, "Raster Dataset", images_to_add)
+print(arcpy.GetMessages())
 print("Program Finished")
